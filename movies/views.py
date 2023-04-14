@@ -1,6 +1,7 @@
 from django.shortcuts import render, redirect
-from .models import Movie
-from .forms import MovieForm
+from .models import Movie, Comment
+from .forms import MovieForm, CommentForm
+from django.views.decorators.http import require_POST
 
 
 def index(request):
@@ -53,3 +54,15 @@ def update(request, pk):
         'form': form,
     }
     return render(request, 'movies/update.html', context)
+
+
+@require_POST
+def likes(request, movie_pk):
+    if request.user.is_authenticated:
+        movie = Movie.objects.get(pk=movie_pk)
+        if movie.like_users.filter(pk=request.user.pk).exists():
+            movie.like_users.remove(request.user)
+        else:
+            movie.like_users.add(request.user)
+        return redirect('movies:index')
+    return redirect('accounts:login')
