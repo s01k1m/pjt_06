@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from .models import Movie, Comment
+from .models import Movie, Comment, Movie_like_users
 from .forms import MovieForm, CommentForm
 from django.views.decorators.http import require_POST
 
